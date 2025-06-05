@@ -164,6 +164,44 @@
     <div id="cart-footer">Total: $0.00</div>
     <button id="close-cart">Close</button>
   </div>
+  <script>
+  document.getElementById('checkout-button').addEventListener('click', () => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (cart.length === 0) {
+      alert('Your cart is empty!');
+      return;
+    }
+
+    // Map cart items to Stripe line_items format
+    const items = cart.map(item => ({
+      price_data: {
+        currency: 'usd',
+        product_data: { name: item.name },
+        unit_amount: Math.round(item.price * 100) // in cents
+      },
+      quantity: item.quantity
+    }));
+
+    fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to create checkout session');
+      }
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      alert('Error creating checkout session');
+    });
+  });
+</script>
+
 
   <footer>
     <p>&copy; 2025 Marie's Graphics and Apparel</p>
