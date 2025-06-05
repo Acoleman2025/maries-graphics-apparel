@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .cart-item { margin-bottom: 10px; }
+    input, button { display: block; margin-top: 10px; padding: 8px; width: 100%; }
+    .total { font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Checkout</h2>
+  <div id="checkout-cart"></div>
+  <p class="total">Total: $<span id="checkout-total">0.00</span></p>
+
+  <h3>Shipping Info</h3>
+  <form id="checkout-form">
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="address" placeholder="Address" required>
+    <input type="text" id="city" placeholder="City" required>
+    <input type="text" id="zip" placeholder="ZIP Code" required>
+    <button type="submit">Place Order</button>
+  </form>
+
+  <script>
+    // Load cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cartDiv = document.getElementById('checkout-cart');
+    const totalSpan = document.getElementById('checkout-total');
+
+    let total = 0;
+    cart.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.textContent = `${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`;
+      cartDiv.appendChild(div);
+      total += item.price * item.quantity;
+    });
+
+    totalSpan.textContent = total.toFixed(2);
+
+    // Form submission
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      alert("Order placed! Thank you, " + document.getElementById('name').value);
+      
+      // Clear cart
+      localStorage.removeItem('cart');
+      window.location.href = '/'; // Redirect to homepage or thank-you page
+    });
+  </script>
+</body>
+</html>
