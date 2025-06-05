@@ -239,68 +239,58 @@
   </script>
 </body>
 </html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Checkout</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    .container { max-width: 600px; margin: auto; }
-    .cart-item { border-bottom: 1px solid #ddd; padding: 10px 0; }
-    label { display: block; margin-top: 10px; }
-    input { width: 100%; padding: 8px; margin-top: 5px; }
-    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Checkout</h2>
+<button id="checkout-button">Checkout</button>
+<script>
+  document.getElementById('checkout-button').addEventListener('click', () => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (cart.length === 0) {
+      alert('Your cart is empty!');
+      return;
+    }
 
-    <div id="cart">
-      <h3>Your Cart</h3>
-      <div class="cart-item">Item 1 - $20</div>
-      <div class="cart-item">Item 2 - $15</div>
-      <p><strong>Total: $35</strong></p>
-    </div>
+    // Map cart items to Stripe line_items format
+    const items = cart.map(item => ({
+      price_data: {
+        currency: 'usd',
+        product_data: { name: item.name },
+        unit_amount: Math.round(item.price * 100) // in cents
+      },
+      quantity: item.quantity
+    }));
 
-    <form id="checkout-form">
-      <h3>Shipping Information</h3>
-      <label for="name">Full Name</label>
-      <input type="text" id="name" required>
-
-      <label for="email">Email</label>
-      <input type="email" id="email" required>
-
-      <label for="address">Address</label>
-      <input type="text" id="address" required>
-
-      <label for="city">City</label>
-      <input type="text" id="city" required>
-
-      <label for="zip">ZIP Code</label>
-      <input type="text" id="zip" required>
-
-      <button type="submit">Place Order</button>
-    </form>
-  </div>
-
-  <script>
-    document.getElementById('checkout-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-
-      // Simple validation
-      if (!name || !email) {
-        alert('Please fill out all required fields.');
-        return;
+    fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to create checkout session');
       }
-
-      // Simulate order placement
-      alert('Order placed successfully!\nThank you, ' + name + '!');
-      this.reset(); // Clear form
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      alert('Error creating checkout session');
     });
-  </script>
-</body>
-</html>
+  });
+</script>
+app.post('/create-checkout-session', async (req, res) => {
+  const { items } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: items,
+      success_url: 'https://yourdomain.com/success.html',
+      cancel_url: 'https://yourdomain.com/cancel.html',
+    });
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
