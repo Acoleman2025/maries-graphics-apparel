@@ -78,6 +78,23 @@
     .product button:hover {
       background-color: #ff1493;
     }
+    #cart-button {
+      display: block;
+      margin: 1.5rem auto 0 auto;
+      padding: 0.75rem 2rem;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      text-align: center;
+      max-width: 200px;
+    }
+    #cart-button:hover {
+      background-color: #ff1493;
+    }
     #cart-toggle {
       position: fixed;
       top: 20px;
@@ -172,6 +189,7 @@
         <button class="add-to-cart">Add to Cart</button>
       </div>
     </div>
+    <button id="cart-button">View Cart (0)</button>
   </section>
 
   <button id="cart-toggle">Cart (0)</button>
@@ -202,6 +220,7 @@
 
   <script>
     const cartToggle = document.getElementById("cart-toggle");
+    const cartButton = document.getElementById("cart-button");
     const cart = document.getElementById("cart");
     const closeCart = document.getElementById("close-cart");
     const cartItems = document.getElementById("cart-items");
@@ -227,6 +246,7 @@
       }
       cartFooter.textContent = `Total: $${totalPrice.toFixed(2)}`;
       cartToggle.textContent = `Cart (${totalItems})`;
+      cartButton.textContent = `View Cart (${totalItems})`;
     }
 
     addToCartButtons.forEach(button => {
@@ -247,6 +267,10 @@
     });
 
     cartToggle.addEventListener("click", () => {
+      cart.classList.toggle("open");
+    });
+
+    cartButton.addEventListener("click", () => {
       cart.classList.toggle("open");
     });
 
