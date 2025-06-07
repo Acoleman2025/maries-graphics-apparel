@@ -60,10 +60,23 @@
       border-radius: 12px;
       width: 250px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
     }
     .product img {
       width: 100%;
       border-radius: 8px;
+    }
+    .product button {
+      background-color: #ff69b4;
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .product button:hover {
+      background-color: #ff1493;
     }
     footer {
       background-color: #ff69b4;
@@ -71,6 +84,66 @@
       text-align: center;
       padding: 1rem;
       margin-top: 2rem;
+    }
+    #cart-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      z-index: 999;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    #cart {
+      position: fixed;
+      top: 0;
+      right: -350px;
+      width: 350px;
+      height: 100vh;
+      background-color: white;
+      box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+      padding: 1.5rem;
+      transition: right 0.4s ease;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    #cart.open {
+      right: 0;
+    }
+    #cart h2 {
+      margin-top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #cart h2 button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #ff69b4;
+    }
+    #cart-items {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+    }
+    #cart-items li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.7rem;
+    }
+    #cart-footer {
+      margin-top: 1.5rem;
+      text-align: right;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #ff69b4;
     }
   </style>
 </head>
@@ -82,7 +155,7 @@
 
   <nav>
     <a href="#home">Home</a>
-   <a href="shop.html">Shop</a>
+    <a href="shop.html">Shop</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -95,34 +168,34 @@
   <section id="shop" class="section">
     <h2>Our Featured Products</h2>
     <div class="products">
-      <div class="product">
+      <div class="product" data-id="1" data-name="Samford T-Shirt" data-price="24.99">
          <img src="20250604_141848.jpg" alt="graphic tee" />
         <h3>Samford T-Shirt</h3>
         <p>$24.99</p>
         <button class="add-to-cart">Add to Cart</button>
       </div>
-      <div class="product">
+      <div class="product" data-id="2" data-name="Samford Tumbler" data-price="29.99">
         <img src="Cup.jpg.jpg" alt="Custom Hoodie" />
         <h3>Samford Tumbler</h3>
         <p>$29.99</p>
         <button class="add-to-cart">Add to Cart</button>
       </div>
-      <div class="product">
+      <div class="product" data-id="3" data-name="Samford Cap" data-price="14.99">
        <img src="20250604_130546.jpg" alt="Logo Cap" />
-
         <h3>Samford Cap</h3>
         <p>$14.99</p>
         <button class="add-to-cart">Add to Cart</button>
       </div>
     </div>
   </section>
+
   <button id="cart-toggle">Cart (0)</button>
 
-<div id="cart">
-  <h2>Shopping Cart <button id="close-cart">&times;</button></h2>
-  <ul id="cart-items"></ul>
-  <div id="cart-footer">Total: $0.00</div>
-</div>
+  <div id="cart">
+    <h2>Shopping Cart <button id="close-cart">&times;</button></h2>
+    <ul id="cart-items"></ul>
+    <div id="cart-footer">Total: $0.00</div>
+  </div>
 
   <section id="about" class="section">
     <h2>About Us</h2>
@@ -139,7 +212,65 @@
   <footer>
     <p>&copy; 2025 Marie's Graphics and Apparel. All rights reserved.</p>
   </footer>
+
+  <script>
+    const cartToggle = document.getElementById('cart-toggle');
+    const cart = document.getElementById('cart');
+    const closeCartBtn = document.getElementById('close-cart');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartFooter = document.getElementById('cart-footer');
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    let cartData = {};
+
+    function updateCartUI() {
+      cartItemsContainer.innerHTML = '';
+      let total = 0;
+      let itemCount = 0;
+
+      for (const id in cartData) {
+        const item = cartData[id];
+        total += item.price * item.qty;
+        itemCount += item.qty;
+
+        const li = document.createElement('li');
+        li.textContent = `${item.name} x${item.qty} - $${(item.price * item.qty).toFixed(2)}`;
+        cartItemsContainer.appendChild(li);
+      }
+
+      cartFooter.textContent = `Total: $${total.toFixed(2)}`;
+      cartToggle.textContent = `Cart (${itemCount})`;
+    }
+
+    addToCartButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        const product = e.target.closest('.product');
+        const id = product.getAttribute('data-id');
+        const name = product.getAttribute('data-name');
+        const price = parseFloat(product.getAttribute('data-price'));
+
+        if (cartData[id]) {
+          cartData[id].qty++;
+        } else {
+          cartData[id] = { name, price, qty: 1 };
+        }
+
+        updateCartUI();
+        cart.classList.add('open');
+      });
+    });
+
+    cartToggle.addEventListener('click', () => {
+      cart.classList.toggle('open');
+      if (cart.classList.contains('open')) {
+        updateCartUI();
+      }
+    });
+
+    closeCartBtn.addEventListener('click', () => {
+      cart.classList.remove('open');
+    });
+  </script>
 </body>
 </html>
-
 
