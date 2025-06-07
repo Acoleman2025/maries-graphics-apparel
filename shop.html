@@ -141,12 +141,13 @@
       <p>$24.99</p>
       <button class="add-to-cart">Add to Cart</button>
     </div>
-   <div class="product" data-id="Samford Dogs Only" data-name='Samford "Dogs Only"' data-price="24.99">
-  <img src="ChatGPT Image Jun 6, 2025, 03_46_39 PM.png" alt='Samford "Dogs Only" White Tee' />
-  <img src="Navy.png" alt='Samford "Dogs Only" Navy Tee' />
+<div class="product" data-id="Samford Dogs Only" data-name='Samford "Dogs Only"' data-price="24.99">
 
   <h3>Samford "Dogs Only" Tee</h3>
   <p>$24.99</p>
+
+  <!-- Shirt image -->
+  <img id="shirt-image" src="ChatGPT Image Jun 6, 2025, 03_46_39 PM.png" alt='Samford "Dogs Only" White Tee' style="width:300px; height:auto;" />
 
   <!-- Size Dropdown -->
   <label for="size-Samford-Dogs-Only">Size:</label>
@@ -160,13 +161,40 @@
     <option value="3XL">3X-Large</option>
   </select>
 
-     <label for="color-Samford-Dogs-Only">Color:</label>
+  <!-- Color Dropdown -->
+  <label for="color-Samford-Dogs-Only">Color:</label>
   <select id="color-Samford-Dogs-Only" name="color">
     <option value="">-- Select Color --</option>
     <option value="White">White</option>
     <option value="Navy">Navy</option>
     <option value="Red">Red</option>
   </select>
+</div>
+
+<script>
+  const colorSelect = document.getElementById('color-Samford-Dogs-Only');
+  const shirtImage = document.getElementById('shirt-image');
+
+  // Map colors to image file paths
+  const colorToImage = {
+    White: "ChatGPT Image Jun 6, 2025, 03_46_39 PM.png",
+    Navy: "Navy.png",
+    Red: "Red.png" // make sure you have this image uploaded too
+  };
+
+  colorSelect.addEventListener('change', () => {
+    const selectedColor = colorSelect.value;
+    if(colorToImage[selectedColor]) {
+      shirtImage.src = colorToImage[selectedColor];
+      shirtImage.alt = `Samford "Dogs Only" ${selectedColor} Tee`;
+    } else {
+      // Default image if no color selected
+      shirtImage.src = "ChatGPT Image Jun 6, 2025, 03_46_39 PM.png";
+      shirtImage.alt = `Samford "Dogs Only" White Tee`;
+    }
+  });
+</script>
+
 </div>
 <button class="add-to-cart">Add to Cart</button>
     </div>
