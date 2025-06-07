@@ -157,7 +157,8 @@
     <div class="product" data-id="samford-dogs-only" data-name='Samford "Dogs Only" Tee' data-price="24.99">
       <h3>Samford "Dogs Only" Tee</h3>
       <p>$24.99</p>
-      <img id="shirt-image" src="ChatGPT Image Jun 6, 2025, 03_46_39 PM.png" alt='Samford "Dogs Only" White Tee' />
+      <!-- Corrected image filename (no spaces or commas) -->
+      <img id="shirt-image" src="ChatGPT_Image_Jun_6_2025_03_46_39_PM.png" alt='Samford "Dogs Only" White Tee' />
       <label for="size-sdo">Size:</label>
       <select id="size-sdo" name="size">
         <option value="">-- Select Size --</option>
@@ -205,10 +206,11 @@
   <script>
     console.log("Shop page script running");
 
+    // Update shirt image based on color selection
     const shirtImage = document.getElementById('shirt-image');
     const colorSelect = document.getElementById('color-sdo');
 
-    // Ensure images filenames do not have spaces or commas
+    // Mapping colors to image filenames (no spaces or commas)
     const colorToImage = {
       White: "ChatGPT_Image_Jun_6_2025_03_46_39_PM.png",
       Navy: "Navy.png",
@@ -221,19 +223,118 @@
       shirtImage.alt = `Samford "Dogs Only" ${selectedColor} Tee`;
     });
 
+    // Cart Elements
     const cartToggle = document.getElementById('cart-toggle');
     const cart = document.getElementById('cart');
     const closeCartBtn = document.getElementById('close-cart');
     const cartItemsContainer = document.getElementById('cart-items');
     const cartFooter = document.getElementById('cart-footer');
 
+    // Load cart from localStorage or start empty
     let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
+    // Add to Cart button handler
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const productDiv = e.target.closest('.product');
+        if (!productDiv) return;
+
+        const id = productDiv.getAttribute('data-id');
+        const name = productDiv.getAttribute('data-name');
+        const price = parseFloat(productDiv.getAttribute('data-price'));
+
+        // Get selected size and color if they exist
+        const sizeSelect = productDiv.querySelector('select[name="size"]');
+        const colorSelect = productDiv.querySelector('select[name="color"]');
+
+        const size = sizeSelect ? sizeSelect.value : '';
+        const color = colorSelect ? colorSelect.value : '';
+
+        // Validate selection if applicable
+        if (sizeSelect && !size) {
+          alert('Please select a size.');
+          return;
+        }
+        if (colorSelect && !color) {
+          alert('Please select a color.');
+          return;
+        }
+
+        // Check if the same product (with same options) is already in cart
+        const existingIndex = cartItems.findIndex(item =>
+          item.id === id &&
+          item.size === size &&
+          item.color === color
+        );
+
+        if (existingIndex > -1) {
+          // Increase quantity if found
+          cartItems[existingIndex].quantity += 1;
+        } else {
+          // Add new product to cart
+          cartItems.push({
+            id,
+            name,
+            price,
+            size,
+            color,
+            quantity: 1
+          });
+        }
+
+        // Save cart and update UI
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+        updateCartUI();
+
+        alert(`${name} added to cart!`);
+      });
+    });
+
+    // Toggle cart visibility
+    cartToggle.addEventListener('click', () => {
+      cart.style.display = cart.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close cart button
+    closeCartBtn.addEventListener('click', () => {
+      cart.style.display = 'none';
+    });
+
+    // Update Cart UI function
     function updateCartUI() {
       cartItemsContainer.innerHTML = '';
       let total = 0;
+      let totalCount = 0;
+
       cartItems.forEach((item, index) => {
         total += item.price * item.quantity;
+        totalCount += item.quantity;
+
         const li = document.createElement('li');
         li.innerHTML = `
-          <span>${item.name}${item.size ? `, Size: ${item.size}` : ''}${item.color ? `,
+          <span>${item.name}${item.size ? `, Size: ${item.size}` : ''}${item.color ? `, Color: ${item.color}` : ''} (x${item.quantity})</span>
+          <button data-index="${index}" class="remove-item" title="Remove item">&times;</button>
+        `;
+        cartItemsContainer.appendChild(li);
+      });
+
+      cartFooter.textContent = `Total: $${total.toFixed(2)}`;
+      cartToggle.textContent = `Cart (${totalCount})`;
+
+      // Remove item buttons
+      document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = e.target.getAttribute('data-index');
+          cartItems.splice(idx, 1);
+          localStorage.setItem('cart', JSON.stringify(cartItems));
+          updateCartUI();
+        });
+      });
+    }
+
+    // Initialize cart UI on page load
+    updateCartUI();
+  </script>
+</body>
+</html>
+
