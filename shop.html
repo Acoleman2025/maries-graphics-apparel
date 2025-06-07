@@ -209,14 +209,13 @@
     const shirtImage = document.getElementById('shirt-image');
     const colorSelect = document.getElementById('color-sdo');
 
-    // Mapping colors to image filenames (no spaces or commas)
     const colorToImage = {
-      White: "ChatGPT_Image_Jun_6_2025_03_46_39_PM.png",
-      Navy: "Navy.png",
-      Red: "Red.jpg"
-    };
+  White: "ChatGPT_Image_Jun_6_2025_03_46_39_PM.png.png",
+  Navy: "Navy.png",
+  Red: "Red.jpg"
+};
 
-    colorSelect.addEventListener('change', () => {
+colorSelect.addEventListener('change', () => {
       const selectedColor = colorSelect.value;
       shirtImage.src = colorToImage[selectedColor] || colorToImage.White;
       shirtImage.alt = `Samford "Dogs Only" ${selectedColor} Tee`;
