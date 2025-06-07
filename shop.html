@@ -150,6 +150,32 @@
       box-sizing: border-box;
       font-size: 1rem;
     }
+
+    /* Quantity controls */
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .qty-controls button {
+      background-color: #ff69b4;
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      user-select: none;
+    }
+    .qty-controls span {
+      min-width: 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1rem;
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
@@ -343,94 +369,149 @@
     // Toggle cart visibility
     cartToggle.addEventListener('click', () => {
       cart.style.display = cart.style.display === 'block' ? 'none' : 'block';
+      if (cart.style.display === 'block') {
+        updateCartUI();
+      }
     });
 
-    // Close cart button
     closeCartBtn.addEventListener('click', () => {
       cart.style.display = 'none';
     });
 
-    // Checkout button shows checkout form and hides cart
-    document.getElementById('checkout-button').addEventListener('click', () => {
-      if (cartItems.length === 0) {
-        alert("Your cart is empty!");
-        return;
-      }
-      cart.style.display = 'none';
-      checkoutSection.style.display = 'block';
-      renderCheckoutCart();
-    });
-
-    // Update Cart UI function
+    // Update cart UI function
     function updateCartUI() {
       cartItemsContainer.innerHTML = '';
       let total = 0;
-      let totalCount = 0;
+      let totalQuantity = 0;
 
       cartItems.forEach((item, index) => {
         total += item.price * item.quantity;
-        totalCount += item.quantity;
+        totalQuantity += item.quantity;
 
         const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${item.name}${item.size ? `, Size: ${item.size}` : ''}${item.color ? `, Color: ${item.color}` : ''} (x${item.quantity})</span>
-          <button data-index="${index}" class="remove-item" title="Remove item">&times;</button>
-        `;
+        li.dataset.index = index;
+
+        // Create quantity controls
+        const qtyControls = document.createElement('div');
+        qtyControls.className = 'qty-controls';
+
+        const btnMinus = document.createElement('button');
+        btnMinus.textContent = '−';
+        btnMinus.title = 'Decrease quantity';
+        btnMinus.addEventListener('click', () => {
+          if (item.quantity > 1) {
+            item.quantity--;
+          } else {
+            // Remove item if quantity goes below 1
+            cartItems.splice(index, 1);
+          }
+          localStorage.setItem('cart', JSON.stringify(cartItems));
+          updateCartUI();
+        });
+
+        const qtySpan = document.createElement('span');
+        qtySpan.textContent = item.quantity;
+
+        const btnPlus = document.createElement('button');
+        btnPlus.textContent = '+';
+        btnPlus.title = 'Increase quantity';
+        btnPlus.addEventListener('click', () => {
+          item.quantity++;
+          localStorage.setItem('cart', JSON.stringify(cartItems));
+          updateCartUI();
+        });
+
+        qtyControls.appendChild(btnMinus);
+        qtyControls.appendChild(qtySpan);
+        qtyControls.appendChild(btnPlus);
+
+        // Format item display text with size and color if present
+        let itemText = `${item.name}`;
+        if (item.size) itemText += ` (Size: ${item.size})`;
+        if (item.color) itemText += ` (Color: ${item.color})`;
+        itemText += ` - $${(item.price * item.quantity).toFixed(2)}`;
+
+        const itemLabel = document.createElement('span');
+        itemLabel.textContent = itemText;
+
+        li.appendChild(itemLabel);
+        li.appendChild(qtyControls);
         cartItemsContainer.appendChild(li);
       });
 
       cartFooter.textContent = `Total: $${total.toFixed(2)}`;
-      cartToggle.textContent = `Cart (${totalCount})`;
+      cartToggle.textContent = `Cart (${totalQuantity})`;
 
-      // Remove item buttons
-      document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const idx = e.target.getAttribute('data-index');
-          cartItems.splice(idx, 1);
-          localStorage.setItem('cart', JSON.stringify(cartItems));
-          updateCartUI();
-        });
-      });
+      if (cartItems.length === 0) {
+        cartItemsContainer.innerHTML = '<li>Your cart is empty.</li>';
+        cartFooter.textContent = 'Total: $0.00';
+        cartToggle.textContent = 'Cart (0)';
+      }
     }
 
-    // Render cart inside checkout section
-    function renderCheckoutCart() {
+    // Initial cart UI update on page load
+    updateCartUI();
+
+    // Checkout button handler
+    const checkoutButton = document.getElementById('checkout-button');
+    checkoutButton.addEventListener('click', () => {
+      if (cartItems.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+      cart.style.display = 'none';
+      showCheckout();
+    });
+
+    // Show checkout UI
+    function showCheckout() {
+      checkoutSection.style.display = 'block';
       checkoutCartDiv.innerHTML = '';
       let total = 0;
+
       cartItems.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.textContent = `${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`;
-        checkoutCartDiv.appendChild(div);
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        let text = `${item.name}`;
+        if (item.size) text += ` (Size: ${item.size})`;
+        if (item.color) text += ` (Color: ${item.color})`;
+        text += ` × ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}`;
+        itemDiv.textContent = text;
+        checkoutCartDiv.appendChild(itemDiv);
         total += item.price * item.quantity;
       });
+
       checkoutTotalSpan.textContent = total.toFixed(2);
     }
 
-    // Checkout form submission
-    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    // Handle order form submission
+    const checkoutForm = document.getElementById('checkout-form');
+    checkoutForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      alert("Order placed! Thank you, " + document.getElementById('name').value);
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const zip = document.getElementById('zip').value.trim();
 
-      // Clear cart
+      if (!name || !email || !address || !city || !zip) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      // Here you would normally send order data to server or payment processor
+      alert(`Thank you for your order, ${name}!`);
+
+      // Clear cart and checkout
       cartItems = [];
       localStorage.removeItem('cart');
-
-      // Reset cart UI
       updateCartUI();
-
-      // Hide checkout, maybe redirect or reset form
       checkoutSection.style.display = 'none';
-      this.reset();
-
-      // Optionally redirect to homepage
-      // window.location.href = '/';
+      checkoutForm.reset();
     });
-
-    // Initialize cart UI on page load
-    updateCartUI();
   </script>
 </body>
 </html>
+
 
