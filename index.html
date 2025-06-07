@@ -2,75 +2,228 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Marie's Graphics and Apparel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
       margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #fff0f5;
-      color: #333;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f6f7;
+      color: #4a4a4a;
+      padding: 30px 20px;
     }
     header {
-      background-color: #ff69b4;
-      color: white;
+      background-color: #b76e79;
+      color: #fff6f8;
       padding: 1.5rem;
       text-align: center;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+    }
+    header p {
+      margin: 0.5rem 0 0 0;
+      font-weight: 400;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #f3dee3;
     }
     nav {
       display: flex;
       justify-content: center;
-      background-color: #ffc0cb;
-      padding: 1rem 0;
+      gap: 2rem;
+      background-color: #f2dede;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
     }
     nav a {
-      margin: 0 1rem;
-      color: #333;
+      color: #6f4a56;
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 600;
+      transition: color 0.3s ease;
+      font-size: 1.1rem;
     }
     nav a:hover {
-      color: #ff1493;
-    }
-    .section {
-      padding: 2rem;
-      max-width: 1200px;
-      margin: auto;
+      color: #b76e79;
     }
     .hero {
       text-align: center;
       padding: 4rem 2rem;
-      background-color: #ffe4e1;
+      background-color: #fce6ea;
+      border-radius: 12px;
+      margin-bottom: 3rem;
     }
     .hero h1 {
-      font-family: 'Playfair Display', serif;
       font-size: 3rem;
+      font-weight: 600;
+      color: #6f4a56;
+      margin-bottom: 0.5rem;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      color: #b76e79;
+      font-weight: 600;
+    }
+    .section {
+      max-width: 1200px;
+      margin: auto;
+      margin-bottom: 3rem;
+    }
+    h2 {
+      color: #6f4a56;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #b76e79;
+      padding-bottom: 0.5rem;
+      max-width: fit-content;
     }
     .products {
       display: flex;
       flex-wrap: wrap;
-      gap: 2rem;
+      gap: 2.5rem;
       justify-content: center;
     }
     .product {
-      background: white;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      border-radius: 12px;
-      width: 250px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(183, 110, 121, 0.15);
+      width: 270px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      text-align: center;
+    }
+    .product:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 20px rgba(183, 110, 121, 0.25);
     }
     .product img {
       width: 100%;
-      border-radius: 8px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+      height: 180px;
+    }
+    .product h3 {
+      margin: 0 0 0.5rem 0;
+      color: #6f4a56;
+      font-weight: 600;
+    }
+    .product p {
+      color: #b76e79;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    button.add-to-cart {
+      background-color: #b76e79;
+      color: #fff6f8;
+      border: none;
+      padding: 0.6rem 1.3rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    button.add-to-cart:hover {
+      background-color: #924e57;
+      box-shadow: 0 4px 8px rgba(146, 78, 87, 0.4);
+    }
+    section#about, section#contact {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(183, 110, 121, 0.15);
+      color: #4a4a4a;
+      max-width: 900px;
+      margin: auto;
+      line-height: 1.6;
     }
     footer {
-      background-color: #ff69b4;
-      color: white;
+      background-color: #b76e79;
+      color: #fff6f8;
       text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
+      padding: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 1.1px;
+      border-radius: 0 0 12px 12px;
+      max-width: 1200px;
+      margin: 2rem auto 0 auto;
+    }
+
+    /* Cart Panel */
+
+    #cart {
+      position: fixed;
+      top: 0;
+      right: -350px;
+      width: 350px;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -5px 0 15px rgba(183, 110, 121, 0.3);
+      border-radius: 12px 0 0 12px;
+      padding: 1.5rem;
+      transition: right 0.4s ease;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    #cart.open {
+      right: 0;
+    }
+    #cart h2 {
+      margin-top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #6f4a56;
+    }
+    #cart h2 button {
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #b76e79;
+    }
+    #cart ul {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 0 0;
+    }
+    #cart ul li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.7rem;
+      color: #4a4a4a;
+    }
+    #cart-footer {
+      font-weight: 700;
+      margin-top: 1.5rem;
+      text-align: right;
+      color: #b76e79;
+      font-size: 1.3rem;
+    }
+    #cart-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #b76e79;
+      color: #fff6f8;
+      border: none;
+      padding: 1rem 1.4rem;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(183, 110, 121, 0.4);
+      z-index: 1100;
+      transition: background-color 0.3s ease;
+    }
+    #cart-toggle:hover {
+      background-color: #924e57;
     }
   </style>
 </head>
@@ -82,7 +235,7 @@
 
   <nav>
     <a href="#home">Home</a>
-   <a href="shop.html">Shop</a>
+    <a href="#shop">Shop</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -94,22 +247,21 @@
 
   <section id="shop" class="section">
     <h2>Our Featured Products</h2>
-    <div class="products">
-      <div class="product">
-         <img src="20250604_141848.jpg" alt="graphic tee" />
+    <div class="products" id="product-list">
+      <div class="product" data-id="1" data-name="Samford T-Shirt" data-price="24.99">
+        <img src="20250604_141848.jpg" alt="graphic tee" />
         <h3>Samford T-Shirt</h3>
         <p>$24.99</p>
         <button class="add-to-cart">Add to Cart</button>
       </div>
-      <div class="product">
+      <div class="product" data-id="2" data-name="Samford Tumbler" data-price="29.99">
         <img src="Cup.jpg.jpg" alt="Custom Hoodie" />
         <h3>Samford Tumbler</h3>
         <p>$29.99</p>
         <button class="add-to-cart">Add to Cart</button>
       </div>
-      <div class="product">
-       <img src="20250604_130546.jpg" alt="Logo Cap" />
-
+      <div class="product" data-id="3" data-name="Samford Cap" data-price="14.99">
+        <img src="20250604_130546.jpg" alt="Logo Cap" />
         <h3>Samford Cap</h3>
         <p>$14.99</p>
         <button class="add-to-cart">Add to Cart</button>
@@ -132,5 +284,86 @@
   <footer>
     <p>&copy; 2025 Marie's Graphics and Apparel. All rights reserved.</p>
   </footer>
+
+  <!-- Cart Panel -->
+  <button id="cart-toggle">Cart (0)</button>
+  <div id="cart" aria-label="Shopping Cart" role="region" aria-hidden="true">
+    <h2>Shopping Cart <button id="close-cart" aria-label="Close Cart">&times;</button></h2>
+    <ul id="cart-items"></ul>
+    <div id="cart-footer">Total: $0.00</div>
+  </div>
+
+  <script>
+    const cartToggle = document.getElementById('cart-toggle');
+    const cart = document.getElementById('cart');
+    const closeCartBtn = document.getElementById('close-cart');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartFooter = document.getElementById('cart-footer');
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    let cartData = {};
+
+    function updateCartUI() {
+      cartItemsContainer.innerHTML = '';
+      let total = 0;
+      let itemCount = 0;
+
+      for (const id in cartData) {
+        const item = cartData[id];
+        total += item.price * item.qty;
+        itemCount += item.qty;
+
+        const li = document.createElement('li');
+        li.style.display = 'flex';
+        li.style.justifyContent = 'space-between';
+        li.style.alignItems = 'center';
+        li.style.marginBottom = '0.7rem';
+
+        li.innerHTML = `
+          <span>${item.name}</span>
+          <span>Qty: ${item.qty}</span>
+          <span>$${(item.price * item.qty).toFixed(2)}</span>
+        `;
+        cartItemsContainer.appendChild(li);
+      }
+
+      cartFooter.textContent = `Total: $${total.toFixed(2)}`;
+      cartToggle.textContent = `Cart (${itemCount})`;
+
+      cart.setAttribute('aria-hidden', cart.classList.contains('open') ? 'false' : 'true');
+    }
+
+    addToCartButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        const product = e.target.closest('.product');
+        const id = product.getAttribute('data-id');
+        const name = product.getAttribute('data-name');
+        const price = parseFloat(product.getAttribute('data-price'));
+
+        if (cartData[id]) {
+          cartData[id].qty++;
+        } else {
+          cartData[id] = { name, price, qty: 1 };
+        }
+
+        updateCartUI();
+        cart.classList.add('open');
+      });
+    });
+
+    cartToggle.addEventListener('click', () => {
+      cart.classList.toggle('open');
+      updateCartUI();
+    });
+
+    closeCartBtn.addEventListener('click', () => {
+      cart.classList.remove('open');
+      cart.setAttribute('aria-hidden', 'true');
+    });
+
+    // Initialize cart aria-hidden
+    cart.setAttribute('aria-hidden', 'true');
+  </script>
 </body>
 </html>
+
