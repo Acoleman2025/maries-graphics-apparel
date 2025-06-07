@@ -338,71 +338,43 @@
 
         // Check if the same product (with same options) is already in cart
         const existingIndex = cartItems.findIndex(item =>
-          item.id === id &&
-          item.size === size &&
-          item.color === color
+          item.id === id && item.size === size && item.color === color
         );
 
         if (existingIndex > -1) {
-          // Increase quantity if found
-          cartItems[existingIndex].quantity += 1;
+          cartItems[existingIndex].quantity++;
         } else {
-          // Add new product to cart
-          cartItems.push({
-            id,
-            name,
-            price,
-            size,
-            color,
-            quantity: 1
-          });
+          cartItems.push({ id, name, price, quantity: 1, size, color });
         }
 
-        // Save cart and update UI
         localStorage.setItem('cart', JSON.stringify(cartItems));
         updateCartUI();
-
         alert(`${name} added to cart!`);
       });
     });
 
-    // Toggle cart visibility
-    cartToggle.addEventListener('click', () => {
-      cart.style.display = cart.style.display === 'block' ? 'none' : 'block';
-      if (cart.style.display === 'block') {
-        updateCartUI();
-      }
-    });
-
-    closeCartBtn.addEventListener('click', () => {
-      cart.style.display = 'none';
-    });
-
-    // Update cart UI function
+    // Update Cart UI
     function updateCartUI() {
       cartItemsContainer.innerHTML = '';
       let total = 0;
-      let totalQuantity = 0;
-
       cartItems.forEach((item, index) => {
-        total += item.price * item.quantity;
-        totalQuantity += item.quantity;
-
         const li = document.createElement('li');
-        li.dataset.index = index;
+        const itemName = document.createElement('span');
+        let desc = item.name;
+        if (item.size) desc += ` (Size: ${item.size})`;
+        if (item.color) desc += ` (Color: ${item.color})`;
+        itemName.textContent = desc;
 
-        // Create quantity controls
-        const qtyControls = document.createElement('div');
+        const qtyControls = document.createElement('span');
         qtyControls.className = 'qty-controls';
 
         const btnMinus = document.createElement('button');
-        btnMinus.textContent = '−';
+        btnMinus.textContent = '-';  // <-- FIXED: ASCII hyphen-minus instead of Unicode minus
         btnMinus.title = 'Decrease quantity';
         btnMinus.addEventListener('click', () => {
           if (item.quantity > 1) {
             item.quantity--;
           } else {
-            // Remove item if quantity goes below 1
             cartItems.splice(index, 1);
           }
           localStorage.setItem('cart', JSON.stringify(cartItems));
@@ -425,70 +397,75 @@
         qtyControls.appendChild(qtySpan);
         qtyControls.appendChild(btnPlus);
 
-        // Format item display text with size and color if present
-        let itemText = `${item.name}`;
-        if (item.size) itemText += ` (Size: ${item.size})`;
-        if (item.color) itemText += ` (Color: ${item.color})`;
-        itemText += ` - $${(item.price * item.quantity).toFixed(2)}`;
+        const priceSpan = document.createElement('span');
+        priceSpan.textContent = '$' + (item.price * item.quantity).toFixed(2);
 
-        const itemLabel = document.createElement('span');
-        itemLabel.textContent = itemText;
-
-        li.appendChild(itemLabel);
+        li.appendChild(itemName);
         li.appendChild(qtyControls);
+        li.appendChild(priceSpan);
+
         cartItemsContainer.appendChild(li);
-      });
 
-      cartFooter.textContent = `Total: $${total.toFixed(2)}`;
-      cartToggle.textContent = `Cart (${totalQuantity})`;
-
-      if (cartItems.length === 0) {
-        cartItemsContainer.innerHTML = '<li>Your cart is empty.</li>';
-        cartFooter.textContent = 'Total: $0.00';
-        cartToggle.textContent = 'Cart (0)';
-      }
-    }
-
-    // Initial cart UI update on page load
-    updateCartUI();
-
-    // Checkout button handler
-    const checkoutButton = document.getElementById('checkout-button');
-    checkoutButton.addEventListener('click', () => {
-      if (cartItems.length === 0) {
-        alert('Your cart is empty!');
-        return;
-      }
-      cart.style.display = 'none';
-      showCheckout();
-    });
-
-    // Show checkout UI
-    function showCheckout() {
-      checkoutSection.style.display = 'block';
-      checkoutCartDiv.innerHTML = '';
-      let total = 0;
-
-      cartItems.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'cart-item';
-        let text = `${item.name}`;
-        if (item.size) text += ` (Size: ${item.size})`;
-        if (item.color) text += ` (Color: ${item.color})`;
-        text += ` × ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}`;
-        itemDiv.textContent = text;
-        checkoutCartDiv.appendChild(itemDiv);
         total += item.price * item.quantity;
       });
 
+      cartFooter.textContent = 'Total: $' + total.toFixed(2);
+      cartToggle.textContent = `Cart (${cartItems.reduce((a, c) => a + c.quantity, 0)})`;
+
+      // Also update checkout summary if visible
+      if (checkoutSection.style.display === 'block') {
+        renderCheckoutCart();
+      }
+    }
+
+    // Show/Hide Cart
+    cartToggle.addEventListener('click', () => {
+      if (cart.style.display === 'block') {
+        cart.style.display = 'none';
+      } else {
+        cart.style.display = 'block';
+        checkoutSection.style.display = 'none';
+      }
+    });
+    closeCartBtn.addEventListener('click', () => {
+      cart.style.display = 'none';
+    });
+
+    // Checkout button
+    const checkoutButton = document.getElementById('checkout-button');
+    checkoutButton.addEventListener('click', () => {
+      if (cartItems.length === 0) {
+        alert('Your cart is empty.');
+        return;
+      }
+      cart.style.display = 'none';
+      checkoutSection.style.display = 'block';
+      renderCheckoutCart();
+    });
+
+    // Render checkout cart items summary
+    function renderCheckoutCart() {
+      checkoutCartDiv.innerHTML = '';
+      let total = 0;
+      cartItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        let desc = item.name;
+        if (item.size) desc += ` (Size: ${item.size})`;
+        if (item.color) desc += ` (Color: ${item.color})`;
+        div.textContent = `${desc} x ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`;
+        checkoutCartDiv.appendChild(div);
+        total += item.price * item.quantity;
+      });
       checkoutTotalSpan.textContent = total.toFixed(2);
     }
 
-    // Handle order form submission
+    // Checkout form submission
     const checkoutForm = document.getElementById('checkout-form');
     checkoutForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
+      // Collect form data
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const address = document.getElementById('address').value.trim();
@@ -496,22 +473,23 @@
       const zip = document.getElementById('zip').value.trim();
 
       if (!name || !email || !address || !city || !zip) {
-        alert('Please fill in all required fields.');
+        alert('Please fill in all shipping fields.');
         return;
       }
 
-      // Here you would normally send order data to server or payment processor
+      // For demo: Just clear cart and show thank you message
       alert(`Thank you for your order, ${name}!`);
 
-      // Clear cart and checkout
       cartItems = [];
       localStorage.removeItem('cart');
       updateCartUI();
-      checkoutSection.style.display = 'none';
+
       checkoutForm.reset();
+      checkoutSection.style.display = 'none';
     });
+
+    // Initial UI update
+    updateCartUI();
   </script>
 </body>
 </html>
-
-
