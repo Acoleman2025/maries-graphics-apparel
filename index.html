@@ -1,343 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Elegant Shop</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f9f6f7;
-    margin: 0;
-    padding: 30px;
-    color: #4a4a4a;
-  }
-
-  header, footer {
-    background-color: #b76e79;
-    color: #fff6f8;
-    text-align: center;
-    padding: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-  }
-
-  nav {
-    background-color: #f2dede;
-    text-align: center;
-    padding: 1rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
-  }
-
-  nav a {
-    margin: 0 1.2rem;
-    color: #6f4a56;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-  }
-
-  nav a:hover {
-    color: #b76e79;
-  }
-
-  .products {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2.5rem;
-    justify-content: center;
-    padding: 2rem 0;
-  }
-
-  .product {
-    background: #fff;
-    padding: 1.5rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(183, 110, 121, 0.15);
-    width: 270px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-  }
-
-  .product:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(183, 110, 121, 0.25);
-  }
-
-  .product img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-  }
-
-  .product h3 {
-    margin: 0 0 0.5rem 0;
-    color: #6f4a56;
-    font-weight: 600;
-  }
-
-  .product p {
-    color: #b76e79;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-  }
-
-  button {
-    background-color: #b76e79;
-    color: #fff6f8;
-    border: none;
-    padding: 0.6rem 1.3rem;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  button:hover {
-    background-color: #924e57;
-    box-shadow: 0 4px 8px rgba(146, 78, 87, 0.4);
-  }
-
-  #cart {
-    position: fixed;
-    top: 0;
-    right: -350px;
-    width: 350px;
-    height: 100vh;
-    background: #fff;
-    box-shadow: -5px 0 15px rgba(183, 110, 121, 0.3);
-    border-radius: 12px 0 0 12px;
-    padding: 1.5rem;
-    transition: right 0.4s ease;
-    z-index: 1000;
-    overflow-y: auto;
-  }
-
-  #cart.open {
-    right: 0;
-  }
-
-  #cart h2 {
-    margin-top: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #6f4a56;
-  }
-
-  #cart h2 button {
-    background: transparent;
-    border: none;
-    font-size: 1.6rem;
-    cursor: pointer;
-    color: #b76e79;
-  }
-
-  #cart ul {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0 0 0;
-  }
-
-  #cart ul li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 0.7rem;
-    color: #4a4a4a;
-  }
-
-  #cart-footer {
-    font-weight: 700;
-    margin-top: 1.5rem;
-    text-align: right;
-    color: #b76e79;
-    font-size: 1.3rem;
-  }
-
-  #cart-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #b76e79;
-    color: #fff6f8;
-    border: none;
-    padding: 1rem 1.4rem;
-    border-radius: 50px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(183, 110, 121, 0.4);
-    z-index: 1100;
-    transition: background-color 0.3s ease;
-  }
-
-  #cart-toggle:hover {
-    background-color: #924e57;
-  }
-
-  /* Quantity controls */
-  .qty-controls button {
-    background-color: #b76e79;
-    border: none;
-    color: white;
-    font-weight: 700;
-    font-size: 1.1rem;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s ease;
-  }
-
-  .qty-controls button:hover {
-    background-color: #924e57;
-  }
-
-  .qty-controls span {
-    min-width: 24px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    display: inline-block;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marie's Graphics and Apparel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #fff0f5;
+      color: #333;
+    }
+    header {
+      background-color: #ff69b4;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #ffc0cb;
+      padding: 1rem 0;
+    }
+    nav a {
+      margin: 0 1rem;
+      color: #333;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      color: #ff1493;
+    }
+    .section {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
+      background-color: #ffe4e1;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+    }
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+    .product {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 12px;
+      width: 250px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .product img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    footer {
+      background-color: #ff69b4;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>Elegant Shop</h1>
-</header>
+  <header>
+    <h1>Marie's Graphics and Apparel</h1>
+    <p>Art You can Wear</p>
+  </header>
 
-<nav>
-  <a href="#">Home</a>
-  <a href="#">Shop</a>
-  <a href="#">About</a>
-  <a href="#">Contact</a>
-</nav>
+  <nav>
+    <a href="#home">Home</a>
+   <a href="shop.html">Shop</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
 
-<div class="products" id="product-list">
-  <!-- Sample products -->
-  <div class="product" data-id="1" data-name="Vintage Vase" data-price="45.00">
-    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Vintage Vase" />
-    <h3>Vintage Vase</h3>
-    <p>$45.00</p>
-    <button class="add-to-cart-btn">Add to Cart</button>
-  </div>
+  <section id="home" class="hero">
+    <h1>Bold. Graphic. You.</h1>
+    <p>Explore unique apparel crafted with artistic flair and love.</p>
+  </section>
 
-  <div class="product" data-id="2" data-name="Handmade Candle" data-price="25.00">
-    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80" alt="Handmade Candle" />
-    <h3>Handmade Candle</h3>
-    <p>$25.00</p>
-    <button class="add-to-cart-btn">Add to Cart</button>
-  </div>
+  <section id="shop" class="section">
+    <h2>Our Featured Products</h2>
+    <div class="products">
+      <div class="product">
+         <img src="20250604_141848.jpg" alt="graphic tee" />
+        <h3>Samford T-Shirt</h3>
+        <p>$24.99</p>
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+      <div class="product">
+        <img src="Cup.jpg.jpg" alt="Custom Hoodie" />
+        <h3>Samford Tumbler</h3>
+        <p>$29.99</p>
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+      <div class="product">
+       <img src="20250604_130546.jpg" alt="Logo Cap" />
 
-  <div class="product" data-id="3" data-name="Cozy Blanket" data-price="65.00">
-    <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=80" alt="Cozy Blanket" />
-    <h3>Cozy Blanket</h3>
-    <p>$65.00</p>
-    <button class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
+        <h3>Samford Cap</h3>
+        <p>$14.99</p>
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+    </div>
+  </section>
 
-<button id="cart-toggle">Cart (0)</button>
+  <section id="about" class="section">
+    <h2>About Us</h2>
+    <p>Marie's Graphics and Apparel was born from a passion for design and a love for comfortable, expressive clothing. We specialize in graphic apparel that helps you stand out and tell your story through style.</p>
+  </section>
 
-<div id="cart">
-  <h2>Shopping Cart <button id="close-cart">&times;</button></h2>
-  <ul id="cart-items"></ul>
-  <div id="cart-footer">Total: $0.00</div>
-</div>
+  <section id="contact" class="section">
+    <h2>Contact Us</h2>
+    <p>Email: maries.graphics@outlook.com</p>
+    <p>Phone: (205) 427-8664</p>
+    <p>Instagram: </p>
+  </section>
 
-<footer>
-  <p>© 2025 Elegant Shop. All rights reserved.</p>
-</footer>
-
-<script>
-  const cartToggle = document.getElementById('cart-toggle');
-  const cart = document.getElementById('cart');
-  const closeCartBtn = document.getElementById('close-cart');
-  const cartItemsContainer = document.getElementById('cart-items');
-  const cartFooter = document.getElementById('cart-footer');
-  const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-
-  let cartData = {};
-
-  function updateCartUI() {
-    cartItemsContainer.innerHTML = '';
-    let total = 0;
-    let itemCount = 0;
-
-    for (const id in cartData) {
-      const item = cartData[id];
-      total += item.price * item.qty;
-      itemCount += item.qty;
-
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <span>${item.name}</span>
-        <div class="qty-controls">
-          <button data-action="decrease" data-id="${id}">−</button>
-          <span>${item.qty}</span>
-          <button data-action="increase" data-id="${id}">+</button>
-        </div>
-        <span>$${(item.price * item.qty).toFixed(2)}</span>
-      `;
-      cartItemsContainer.appendChild(li);
-    }
-
-    cartFooter.textContent = `Total: $${total.toFixed(2)}`;
-    cartToggle.textContent = `Cart (${itemCount})`;
-
-    // Attach event listeners for quantity buttons
-    cartItemsContainer.querySelectorAll('button').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const action = e.target.getAttribute('data-action');
-        const id = e.target.getAttribute('data-id');
-        if (action === 'increase') {
-          cartData[id].qty++;
-        } else if (action === 'decrease') {
-          cartData[id].qty--;
-          if (cartData[id].qty <= 0) {
-            delete cartData[id];
-          }
-        }
-        updateCartUI();
-      });
-    });
-  }
-
-  addToCartButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      const product = e.target.closest('.product');
-      const id = product.getAttribute('data-id');
-      const name = product.getAttribute('data-name');
-      const price = parseFloat(product.getAttribute('data-price'));
-
-      if (cartData[id]) {
-        cartData[id].qty++;
-      } else {
-        cartData[id] = { name, price, qty: 1 };
-      }
-
-      updateCartUI();
-      cart.classList.add('open');
-    });
-  });
-
-  cartToggle.addEventListener('click', () => {
-    cart.classList.toggle('open');
-    if (cart.classList.contains('open')) {
-      updateCartUI();
-    }
-  });
-
-  closeCartBtn.addEventListener('click', () => {
-    cart.classList.remove('open');
-  });
-</script>
+  <footer>
+    <p>&copy; 2025 Marie's Graphics and Apparel. All rights reserved.</p>
+  </footer>
 </body>
 </html>
