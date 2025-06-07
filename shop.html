@@ -164,18 +164,15 @@
     <option value="Red">Red</option>
   </select>
 </div>
-
 <script>
   const colorSelect = document.getElementById('color-Samford-Dogs-Only');
   const shirtImage = document.getElementById('shirt-image');
 
-  // Map colors to image file paths
   const colorToImage = {
     White: "ChatGPT Image Jun 6, 2025, 03_46_39 PM.png",
     Navy: "Navy.png",
     Red: "Red.jpg"
-
-  colorSelect.addEventListener('change', () => {
+colorSelect.addEventListener('change', () => {
     const selectedColor = colorSelect.value;
     if(colorToImage[selectedColor]) {
       shirtImage.src = colorToImage[selectedColor];
@@ -193,16 +190,7 @@
       <button class="add-to-cart">Add to Cart</button>
         </div>
     
-  </section>
-
-  <button id="cart-toggle">Cart (0)</button>
-  <div id="cart">
-    <h2>Your Cart</h2>
-    <ul id="cart-items"></ul>
-    <div id="cart-footer">Total: $0.00</div>
-    <button id="close-cart">Close</button>
-  </div>
-  <script>
+ <script>
   document.getElementById('checkout-button').addEventListener('click', () => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cart.length === 0) {
