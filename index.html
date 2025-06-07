@@ -89,19 +89,24 @@
       border-radius: 30px;
       cursor: pointer;
       font-weight: bold;
-      z-index: 999;
+      z-index: 9999;
+      box-shadow: 0 0 8px rgba(255,105,180,0.7);
+      transition: background-color 0.3s ease;
+    }
+    #cart-toggle:hover {
+      background-color: #ff1493;
     }
     #cart {
       position: fixed;
       top: 0;
-      right: -320px; /* fixed offscreen by pixel */
+      right: -320px; /* hidden offscreen */
       width: 300px;
       height: 100vh;
       background-color: white;
       box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
       padding: 1rem;
       transition: right 0.3s ease;
-      z-index: 1000;
+      z-index: 10000;
       display: flex;
       flex-direction: column;
     }
@@ -113,26 +118,41 @@
       justify-content: space-between;
       align-items: center;
       margin: 0 0 1rem 0;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
     }
     #cart h2 button {
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
       color: #ff69b4;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.3s ease;
+    }
+    #cart h2 button:hover {
+      color: #ff1493;
     }
     #cart-items {
       list-style: none;
       padding: 0;
       flex-grow: 1;
       overflow-y: auto;
+      margin: 0;
+      font-size: 1rem;
     }
     #cart-items li {
       margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 6px;
     }
     #cart-footer {
       margin-top: 1rem;
       font-weight: bold;
+      font-size: 1.2rem;
+      text-align: right;
+      font-family: 'Playfair Display', serif;
     }
     #checkout-btn {
       background-color: #ff69b4;
@@ -144,9 +164,18 @@
       font-weight: bold;
       width: 100%;
       margin-top: 10px;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
     }
     #checkout-btn:hover {
       background-color: #ff1493;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #ffc0cb;
+      font-size: 0.9rem;
+      margin-top: 3rem;
     }
   </style>
 </head>
