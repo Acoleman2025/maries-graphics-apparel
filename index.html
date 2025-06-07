@@ -1,197 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Marie's Graphics and Apparel</title>
-  <style>
-    /* Basic styles */
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #fff;
-      color: #333;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Elegant Shop</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    header {
-      background: #222;
-      color: white;
-      padding: 1em 2em;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f6f7;
+    margin: 0;
+    padding: 30px;
+    color: #4a4a4a;
+  }
 
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
+  header, footer {
+    background-color: #b76e79;
+    color: #fff6f8;
+    text-align: center;
+    padding: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+  }
 
-    #cart-toggle {
-      background: #ff4081;
-      color: white;
-      border: none;
-      padding: 0.5em 1em;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+  nav {
+    background-color: #f2dede;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
 
-    main {
-      padding: 2em;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2em;
-    }
+  nav a {
+    margin: 0 1.2rem;
+    color: #6f4a56;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
 
-    .product {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 1em;
-      text-align: center;
-    }
+  nav a:hover {
+    color: #b76e79;
+  }
 
-    .product img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 6px;
-    }
+  .products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    justify-content: center;
+    padding: 2rem 0;
+  }
 
-    .product h3 {
-      margin: 0.5em 0;
-    }
+  .product {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(183, 110, 121, 0.15);
+    width: 270px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
 
-    .product p {
-      margin: 0.5em 0;
-      font-weight: bold;
-    }
+  .product:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(183, 110, 121, 0.25);
+  }
 
-    .add-to-cart-btn {
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 0.5em 1em;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+  .product img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
 
-    .add-to-cart-btn:hover {
-      background-color: #0056b3;
-    }
+  .product h3 {
+    margin: 0 0 0.5rem 0;
+    color: #6f4a56;
+    font-weight: 600;
+  }
 
-    /* Cart styles */
-    #cart {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 300px;
-      height: 100%;
-      background: #f8f8f8;
-      box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-      transition: right 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      z-index: 999;
-      padding: 1em;
-    }
+  .product p {
+    color: #b76e79;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
 
-    #cart.open {
-      right: 0;
-    }
+  button {
+    background-color: #b76e79;
+    color: #fff6f8;
+    border: none;
+    padding: 0.6rem 1.3rem;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
 
-    #cart h2 {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1.2rem;
-      margin-bottom: 1em;
-    }
+  button:hover {
+    background-color: #924e57;
+    box-shadow: 0 4px 8px rgba(146, 78, 87, 0.4);
+  }
 
-    #cart-items {
-      list-style: none;
-      padding: 0;
-      flex-grow: 1;
-      overflow-y: auto;
-    }
+  #cart {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 350px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -5px 0 15px rgba(183, 110, 121, 0.3);
+    border-radius: 12px 0 0 12px;
+    padding: 1.5rem;
+    transition: right 0.4s ease;
+    z-index: 1000;
+    overflow-y: auto;
+  }
 
-    #cart-items li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5em;
-      font-size: 0.9rem;
-    }
+  #cart.open {
+    right: 0;
+  }
 
-    .qty-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-    }
+  #cart h2 {
+    margin-top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #6f4a56;
+  }
 
-    .qty-controls button {
-      border: none;
-      background: #ccc;
-      border-radius: 4px;
-      padding: 0.2em 0.5em;
-      cursor: pointer;
-    }
+  #cart h2 button {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: #b76e79;
+  }
 
-    #cart-footer {
-      padding-top: 1em;
-      font-weight: bold;
-    }
+  #cart ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
+  }
 
-    #close-cart {
-      background: transparent;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-  </style>
+  #cart ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.7rem;
+    color: #4a4a4a;
+  }
+
+  #cart-footer {
+    font-weight: 700;
+    margin-top: 1.5rem;
+    text-align: right;
+    color: #b76e79;
+    font-size: 1.3rem;
+  }
+
+  #cart-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #b76e79;
+    color: #fff6f8;
+    border: none;
+    padding: 1rem 1.4rem;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(183, 110, 121, 0.4);
+    z-index: 1100;
+    transition: background-color 0.3s ease;
+  }
+
+  #cart-toggle:hover {
+    background-color: #924e57;
+  }
+
+  /* Quantity controls */
+  .qty-controls button {
+    background-color: #b76e79;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .qty-controls button:hover {
+    background-color: #924e57;
+  }
+
+  .qty-controls span {
+    min-width: 24px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: inline-block;
+  }
+</style>
 </head>
 <body>
-
 <header>
-  <h1>Marie's Graphics and Apparel</h1>
-  <button id="cart-toggle">Cart (0)</button>
+  <h1>Elegant Shop</h1>
 </header>
 
-<main>
-  <!-- Product 1 -->
-  <div class="product" data-id="101" data-name="Graphic Tee" data-price="30.00">
-    <img src="https://via.placeholder.com/200x200?text=Graphic+Tee" alt="Graphic Tee">
-    <h3>Graphic Tee</h3>
-    <p>$30.00</p>
-    <button class="add-to-cart-btn">Add to Cart</button>
-  </div>
+<nav>
+  <a href="#">Home</a>
+  <a href="#">Shop</a>
+  <a href="#">About</a>
+  <a href="#">Contact</a>
+</nav>
 
-  <!-- Product 2 -->
-  <div class="product" data-id="102" data-name="Custom Hoodie" data-price="45.00">
-    <img src="https://via.placeholder.com/200x200?text=Custom+Hoodie" alt="Custom Hoodie">
-    <h3>Custom Hoodie</h3>
+<div class="products" id="product-list">
+  <!-- Sample products -->
+  <div class="product" data-id="1" data-name="Vintage Vase" data-price="45.00">
+    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Vintage Vase" />
+    <h3>Vintage Vase</h3>
     <p>$45.00</p>
     <button class="add-to-cart-btn">Add to Cart</button>
   </div>
 
-  <!-- Product 3 -->
-  <div class="product" data-id="103" data-name="Printed Cap" data-price="20.00">
-    <img src="https://via.placeholder.com/200x200?text=Printed+Cap" alt="Printed Cap">
-    <h3>Printed Cap</h3>
-    <p>$20.00</p>
+  <div class="product" data-id="2" data-name="Handmade Candle" data-price="25.00">
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80" alt="Handmade Candle" />
+    <h3>Handmade Candle</h3>
+    <p>$25.00</p>
     <button class="add-to-cart-btn">Add to Cart</button>
   </div>
-</main>
 
-<!-- Slide-out Cart -->
+  <div class="product" data-id="3" data-name="Cozy Blanket" data-price="65.00">
+    <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=80" alt="Cozy Blanket" />
+    <h3>Cozy Blanket</h3>
+    <p>$65.00</p>
+    <button class="add-to-cart-btn">Add to Cart</button>
+  </div>
+</div>
+
+<button id="cart-toggle">Cart (0)</button>
+
 <div id="cart">
   <h2>Shopping Cart <button id="close-cart">&times;</button></h2>
   <ul id="cart-items"></ul>
   <div id="cart-footer">Total: $0.00</div>
 </div>
 
-<!-- JavaScript -->
+<footer>
+  <p>© 2025 Elegant Shop. All rights reserved.</p>
+</footer>
+
 <script>
   const cartToggle = document.getElementById('cart-toggle');
   const cart = document.getElementById('cart');
@@ -225,9 +289,10 @@
       cartItemsContainer.appendChild(li);
     }
 
-    cartFooter.textContent = \`Total: $\${total.toFixed(2)}\`;
-    cartToggle.textContent = \`Cart (\${itemCount})\`;
+    cartFooter.textContent = `Total: $${total.toFixed(2)}`;
+    cartToggle.textContent = `Cart (${itemCount})`;
 
+    // Attach event listeners for quantity buttons
     cartItemsContainer.querySelectorAll('button').forEach(button => {
       button.addEventListener('click', (e) => {
         const action = e.target.getAttribute('data-action');
@@ -274,6 +339,5 @@
     cart.classList.remove('open');
   });
 </script>
-
 </body>
 </html>
