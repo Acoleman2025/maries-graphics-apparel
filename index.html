@@ -94,7 +94,7 @@
     #cart {
       position: fixed;
       top: 0;
-      right: -100%;
+      right: -320px; /* fixed offscreen by pixel */
       width: 300px;
       height: 100vh;
       background-color: white;
@@ -102,6 +102,8 @@
       padding: 1rem;
       transition: right 0.3s ease;
       z-index: 1000;
+      display: flex;
+      flex-direction: column;
     }
     #cart.open {
       right: 0;
@@ -110,6 +112,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin: 0 0 1rem 0;
     }
     #cart h2 button {
       background: none;
@@ -121,6 +124,8 @@
     #cart-items {
       list-style: none;
       padding: 0;
+      flex-grow: 1;
+      overflow-y: auto;
     }
     #cart-items li {
       margin-bottom: 10px;
@@ -129,24 +134,18 @@
       margin-top: 1rem;
       font-weight: bold;
     }
-
-    /* Added styling for the new View Cart button */
-    #cart-button {
-      display: block;
-      margin: 2rem auto 0 auto;
-      padding: 0.75rem 2rem;
+    #checkout-btn {
       background-color: #ff69b4;
-      color: white;
       border: none;
-      border-radius: 30px;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 1rem;
-      text-align: center;
-      max-width: 200px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 100%;
+      margin-top: 10px;
     }
-    #cart-button:hover {
+    #checkout-btn:hover {
       background-color: #ff1493;
     }
   </style>
@@ -192,9 +191,6 @@
         <button class="add-to-cart">Add to Cart</button>
       </div>
     </div>
-
-    <!-- Added the View Cart button here -->
-    <button id="cart-button">View Cart (0)</button>
   </section>
 
   <button id="cart-toggle">Cart (0)</button>
@@ -203,6 +199,7 @@
     <h2>Cart <button id="close-cart">&times;</button></h2>
     <ul id="cart-items"></ul>
     <div id="cart-footer">Total: $0.00</div>
+    <button id="checkout-btn">Checkout</button>
   </div>
 
   <section id="about" class="section">
@@ -222,12 +219,12 @@
 
   <script>
     const cartToggle = document.getElementById("cart-toggle");
-    const cartButton = document.getElementById("cart-button");
     const cart = document.getElementById("cart");
     const closeCart = document.getElementById("close-cart");
     const cartItems = document.getElementById("cart-items");
     const cartFooter = document.getElementById("cart-footer");
     const addToCartButtons = document.querySelectorAll(".add-to-cart");
+    const checkoutBtn = document.getElementById("checkout-btn");
 
     let cartData = {};
     let totalItems = 0;
@@ -247,7 +244,6 @@
       }
       cartFooter.textContent = `Total: $${totalPrice.toFixed(2)}`;
       cartToggle.textContent = `Cart (${totalItems})`;
-      cartButton.textContent = `View Cart (${totalItems})`;
     }
 
     addToCartButtons.forEach(button => {
@@ -271,13 +267,23 @@
       cart.classList.toggle("open");
     });
 
-    cartButton.addEventListener("click", () => {
-      cart.classList.add("open");
-    });
-
     closeCart.addEventListener("click", () => {
       cart.classList.remove("open");
     });
+
+    checkoutBtn.addEventListener("click", () => {
+      if (totalItems === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+      alert(`Thanks for your purchase!\nTotal: $${totalPrice.toFixed(2)}`);
+      cartData = {};
+      updateCart();
+      cart.classList.remove("open");
+    });
+
+    // Initialize cart display on load
+    updateCart();
   </script>
 </body>
 </html>
