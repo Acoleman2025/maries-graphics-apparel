@@ -1,114 +1,303 @@
-<script>
-  // Shirt color to image mapping
-  const colorSelect = document.getElementById('color-Samford-Dogs-Only');
-  const shirtImage = document.getElementById('shirt-image');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shop - Marie's Graphics and Apparel</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #fff0f5;
+      margin: 0;
+    }
+    header, footer {
+      background-color: #ff69b4;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+    nav {
+      background-color: #ffc0cb;
+      text-align: center;
+      padding: 1rem;
+    }
+    nav a {
+      margin: 0 1rem;
+      color: #333;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .product {
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 250px;
+    }
+    .product img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #ff4c94;
+    }
+    #cart {
+      position: fixed;
+      top: 10%;
+      right: 10px;
+      width: 300px;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: white;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 1rem;
+      display: none;
+      z-index: 1000;
+    }
+    #cart h2 {
+      margin-top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #cart h2 button {
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #ff69b4;
+    }
+    #cart ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #cart ul li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      align-items: center;
+      gap: 5px;
+    }
+    #cart-footer {
+      font-weight: bold;
+      margin-top: 1rem;
+      text-align: right;
+    }
+    #cart-toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #ff69b4;
+      color: white;
+      border: none;
+      padding: 0.8rem 1rem;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1100;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Shop at Marie's Graphics and Apparel</h1>
+  </header>
 
-  const colorToImage = {
-    White: "ChatGPT Image Jun 6, 2025, 03_46_39 PM.png",
-    Navy: "Navy.png",
-    Red: "Red.jpg"
-  };
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
 
-  colorSelect.addEventListener('change', () => {
-    const selectedColor = colorSelect.value;
-    if (colorToImage[selectedColor]) {
-      shirtImage.src = colorToImage[selectedColor];
+  <section class="products">
+    <div class="product" data-id="logo-cap" data-name="Logo Cap" data-price="14.99">
+      <img src="20250604_130546.jpg" alt="Logo Cap" />
+      <h3>Samford Cap</h3>
+      <p>$14.99</p>
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product" data-id="samford-tumbler" data-name="Samford Tumbler" data-price="24.99">
+      <img src="Cup.jpg.jpg" alt="Samford Tumbler" />
+      <h3>Samford Tumbler</h3>
+      <p>$24.99</p>
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product" data-id="samford-tote" data-name="Samford Tote" data-price="24.99">
+      <img src="clear-tote-with-pocket_large.webp" alt="Samford Tote" />
+      <h3>Samford Tote</h3>
+      <p>$24.99</p>
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product" data-id="samford-dogs-only" data-name='Samford "Dogs Only" Tee' data-price="24.99">
+      <h3>Samford "Dogs Only" Tee</h3>
+      <p>$24.99</p>
+      <img id="shirt-image" src="ChatGPT Image Jun 6, 2025, 03_46_39 PM.png" alt='Samford "Dogs Only" White Tee' />
+      <label for="size-sdo">Size:</label>
+      <select id="size-sdo" name="size">
+        <option value="">-- Select Size --</option>
+        <option value="S">Small</option>
+        <option value="M">Medium</option>
+        <option value="L">Large</option>
+        <option value="XL">X-Large</option>
+        <option value="2XL">2X-Large</option>
+        <option value="3XL">3X-Large</option>
+      </select>
+      <label for="color-sdo">Color:</label>
+      <select id="color-sdo" name="color">
+        <option value="">-- Select Color --</option>
+        <option value="White">White</option>
+        <option value="Navy">Navy</option>
+        <option value="Red">Red</option>
+      </select>
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product" data-id="sun-visor" data-name="Sun Visor" data-price="14.99">
+      <img src="Visor.jpg" alt="Visor" />
+      <h3>Samford Sun Visor</h3>
+      <p>$14.99</p>
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+  </section>
+
+  <button id="cart-toggle">Cart (0)</button>
+
+  <div id="cart">
+    <h2>
+      Your Cart
+      <button id="close-cart" title="Close Cart">&times;</button>
+    </h2>
+    <ul id="cart-items"></ul>
+    <div id="cart-footer">Total: $0.00</div>
+    <button id="checkout-button">Checkout</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Marie's Graphics and Apparel</p>
+  </footer>
+
+  <script>
+    const shirtImage = document.getElementById('shirt-image');
+    const colorSelect = document.getElementById('color-sdo');
+
+    const colorToImage = {
+      White: "ChatGPT Image Jun 6, 2025, 03_46_39 PM.png",
+      Navy: "Navy.png",
+      Red: "Red.jpg"
+    };
+
+    colorSelect.addEventListener('change', () => {
+      const selectedColor = colorSelect.value;
+      shirtImage.src = colorToImage[selectedColor] || colorToImage.White;
       shirtImage.alt = `Samford "Dogs Only" ${selectedColor} Tee`;
-    } else {
-      shirtImage.src = colorToImage.White;
-      shirtImage.alt = `Samford "Dogs Only" White Tee`;
-    }
-  });
-
-  // Cart functionality
-  const cartToggle = document.getElementById('cart-toggle');
-  const cart = document.getElementById('cart');
-  const closeCartBtn = document.getElementById('close-cart');
-  const cartItemsContainer = document.getElementById('cart-items');
-  const cartFooter = document.getElementById('cart-footer');
-
-  let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-
-  function updateCartUI() {
-    cartItemsContainer.innerHTML = '';
-    let total = 0;
-    cartItems.forEach((item, index) => {
-      total += item.price * item.quantity;
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <span>${item.name}${item.size ? `, Size: ${item.size}` : ''}${item.color ? `, Color: ${item.color}` : ''} x ${item.quantity}</span>
-        <button data-index="${index}" aria-label="Remove item">&times;</button>
-        <span>$${(item.price * item.quantity).toFixed(2)}</span>
-      `;
-      cartItemsContainer.appendChild(li);
     });
-    cartFooter.textContent = `Total: $${total.toFixed(2)}`;
-    cartToggle.textContent = `Cart (${cartItems.reduce((sum, i) => sum + i.quantity, 0)})`;
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }
 
-  function addToCart(product) {
-    const existingIndex = cartItems.findIndex(item =>
-      item.id === product.id &&
-      item.size === product.size &&
-      item.color === product.color
-    );
-    if (existingIndex >= 0) {
-      cartItems[existingIndex].quantity++;
-    } else {
-      cartItems.push({ ...product, quantity: 1 });
+    const cartToggle = document.getElementById('cart-toggle');
+    const cart = document.getElementById('cart');
+    const closeCartBtn = document.getElementById('close-cart');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartFooter = document.getElementById('cart-footer');
+
+    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function updateCartUI() {
+      cartItemsContainer.innerHTML = '';
+      let total = 0;
+      cartItems.forEach((item, index) => {
+        total += item.price * item.quantity;
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${item.name}${item.size ? `, Size: ${item.size}` : ''}${item.color ? `, Color: ${item.color}` : ''} x ${item.quantity}</span>
+          <button data-index="${index}" aria-label="Remove item">&times;</button>
+          <span>$${(item.price * item.quantity).toFixed(2)}</span>
+        `;
+        cartItemsContainer.appendChild(li);
+      });
+      cartFooter.textContent = `Total: $${total.toFixed(2)}`;
+      cartToggle.textContent = `Cart (${cartItems.reduce((sum, i) => sum + i.quantity, 0)})`;
+      localStorage.setItem('cart', JSON.stringify(cartItems));
     }
-    updateCartUI();
-  }
 
-  cartToggle.addEventListener('click', () => {
-    cart.style.display = cart.style.display === 'block' ? 'none' : 'block';
-  });
-
-  closeCartBtn.addEventListener('click', () => {
-    cart.style.display = 'none';
-  });
-
-  cartItemsContainer.addEventListener('click', (e) => {
-    if (e.target.tagName === 'BUTTON') {
-      const index = e.target.getAttribute('data-index');
-      cartItems.splice(index, 1);
+    function addToCart(product) {
+      const existingIndex = cartItems.findIndex(item =>
+        item.id === product.id &&
+        item.size === product.size &&
+        item.color === product.color
+      );
+      if (existingIndex >= 0) {
+        cartItems[existingIndex].quantity++;
+      } else {
+        cartItems.push({ ...product, quantity: 1 });
+      }
       updateCartUI();
     }
-  });
 
-  document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', (e) => {
-      const productEl = e.target.closest('.product');
-      const product = {
-        id: productEl.getAttribute('data-id'),
-        name: productEl.getAttribute('data-name'),
-        price: parseFloat(productEl.getAttribute('data-price')),
-      };
-
-      if (product.id === "Samford Dogs Only") {
-        const sizeSelect = productEl.querySelector('select[name="size"]');
-        const colorSelect = productEl.querySelector('select[name="color"]');
-        const size = sizeSelect ? sizeSelect.value : '';
-        const color = colorSelect ? colorSelect.value : '';
-
-        if (!size) {
-          alert('Please select a size.');
-          return;
-        }
-        if (!color) {
-          alert('Please select a color.');
-          return;
-        }
-
-        product.size = size;
-        product.color = color;
-      }
-
-      addToCart(product);
-      alert(`${product.name} added to cart!`);
+    cartToggle.addEventListener('click', () => {
+      cart.style.display = cart.style.display === 'block' ? 'none' : 'block';
     });
-  });
 
-  updateCartUI();
-</script>
+    closeCartBtn.addEventListener('click', () => {
+      cart.style.display = 'none';
+    });
+
+    cartItemsContainer.addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON') {
+        const index = e.target.getAttribute('data-index');
+        cartItems.splice(index, 1);
+        updateCartUI();
+      }
+    });
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const productEl = e.target.closest('.product');
+        const id = productEl.getAttribute('data-id');
+        const name = productEl.getAttribute('data-name');
+        const price = parseFloat(productEl.getAttribute('data-price'));
+
+        const product = { id, name, price };
+
+        // If it's the shirt with size and color
+        if (id === "samford-dogs-only") {
+          const size = productEl.querySelector('select[name="size"]').value;
+          const color = productEl.querySelector('select[name="color"]').value;
+
+          if (!size || !color) {
+            alert("Please select both size and color.");
+            return;
+          }
+          product.size = size;
+          product.color = color;
+        }
+
+        addToCart(product);
+        alert(`${product.name} added to cart!`);
+      });
+    });
+
+    updateCartUI();
+  </script>
+</body>
+</html>
+
