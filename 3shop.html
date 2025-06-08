@@ -310,7 +310,7 @@
   </div>
 
   <!-- Checkout Section -->
- <section id="checkout-section" style="display:none;">
+<section id="checkout-section" style="display:none;">
   <h2>Checkout</h2>
   <div id="checkout-cart"></div>
   <p class="total">Total: $<span id="checkout-total">0.00</span></p>
@@ -323,7 +323,7 @@
     <input type="text" id="city" placeholder="City" required />
     <input type="text" id="zip" placeholder="ZIP Code" required />
 
-    <!-- Square Card payment input will attach here -->
+    <!-- Square Card input -->
     <div id="card-container" style="margin: 1rem 0;"></div>
 
     <button type="submit">Place Order</button>
@@ -336,85 +336,83 @@
 <script>
   console.log("Shop page script running");
 
-  // Your existing code omitted for brevity...
-
-  // Initialize Square payments
   const payments = Square.payments('sq0idp-yBj05c7DSsg9Wsql9ETwug', 'LTNPX98YE7YP0');
   let card;
 
   async function initializeCard() {
-    card = await payments.card();
-    await card.attach('#card-container');
+    try {
+      card = await payments.card();
+      await card.attach('#card-container');
+      console.log('Square card input attached.');
+    } catch (err) {
+      console.error('Failed to initialize Square card input:', err);
+      alert('Payment form failed to load. Please refresh the page.');
+    }
   }
-  initializeCard();
 
-  async function tokenize(paymentMethod) {
-    const result = await paymentMethod.tokenize();
+  async function tokenizeCard() {
+    const result = await card.tokenize();
     if (result.status === 'OK') {
       return result.token;
     } else {
-      throw new Error('Tokenization failed: ' + (result.errors ? result.errors[0].message : 'Unknown error'));
+      throw new Error(result.errors?.[0]?.message || 'Tokenization failed');
     }
   }
 
-  // Checkout form submission handler
-checkoutForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
+  // Initialize card input on load
+  initializeCard();
 
-  // Collect form data
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const address = document.getElementById('address').value.trim();
-  const city = document.getElementById('city').value.trim();
-  const zip = document.getElementById('zip').value.trim();
+  const checkoutForm = document.getElementById('checkout-form');
+  checkoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  if (!name || !email || !address || !city || !zip) {
-    alert('Please fill in all shipping fields.');
-    return;
-  }
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const zip = document.getElementById('zip').value.trim();
 
-  try {
-    const token = await tokenize(card);
-
-    // Calculate total amount from cartItems
-    const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-    // Call backend to process payment
-    const response = await fetch('/api/process-payment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        token,
-        amount: totalAmount,
-        name,
-        email,
-        address,
-        city,
-        zip,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok && data.success) {
-      alert(`Payment successful! Thank you for your order, ${name}!`);
-
-      cartItems = [];
-      localStorage.removeItem('cart');
-      updateCartUI();
-
-      checkoutForm.reset();
-      checkoutSection.style.display = 'none';
-    } else {
-      alert(`Payment failed: ${data.error || 'Unknown error'}`);
+    if (!name || !email || !address || !city || !zip) {
+      alert('Please fill in all shipping fields.');
+      return;
     }
-  } catch (error) {
-    alert(`Payment error: ${error.message}`);
-  }
-});
 
+    try {
+      const token = await tokenizeCard();
+      const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+      const response = await fetch('/api/process-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token,
+          amount: totalAmount,
+          name,
+          email,
+          address,
+          city,
+          zip,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert(`Payment successful! Thank you for your order, ${name}!`);
+        cartItems = [];
+        localStorage.removeItem('cart');
+        updateCartUI();
+        checkoutForm.reset();
+        checkoutSection.style.display = 'none';
+      } else {
+        alert(`Payment failed: ${data.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert(`Payment error: ${error.message}`);
+    }
+  });
+</script>
   // Your existing updateCartUI and other functions...
 
   // Initial UI update
