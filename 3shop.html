@@ -440,10 +440,14 @@
         btnPlus.textContent = '+';
         btnPlus.title = 'Increase quantity';
         btnPlus.addEventListener('click', () => {
-          item.quantity++;
-          localStorage.setItem('cart', JSON.stringify(cartItems));
-          updateCartUI();
-        });
+            if (item.quantity < 5) {
+            item.quantity++;
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            updateCartUI();
+        } else {
+          alert('Maximum quantity for this product is 5.');
+        }
+      });
 
         qtyControls.appendChild(btnMinus);
         qtyControls.appendChild(qtySpan);
