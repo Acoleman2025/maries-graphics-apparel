@@ -192,30 +192,30 @@
 
   <section class="products">
     <div class="product" data-id="logo-cap" data-name="Logo Cap" data-price="14.99">
-      <img src="20250604_130546.jpg" alt="Logo Cap" />
-      <h3>Samford Cap</h3>
+      <img src="Navy Cap.png" />
+      <h3>Samford Ball Cap</h3>
       <p>$14.99</p>
       <button class="add-to-cart">Add to Cart</button>
     </div>
 
     <div class="product" data-id="samford-tumbler" data-name="Samford Tumbler" data-price="24.99">
-      <img src="Cup.jpg.jpg" alt="Samford Tumbler" />
+      <img src="Cup.png" alt="Samford Tumbler" />
       <h3>Samford Tumbler</h3>
       <p>$24.99</p>
       <button class="add-to-cart">Add to Cart</button>
     </div>
 
     <div class="product" data-id="samford-tote" data-name="Samford Tote" data-price="24.99">
-      <img src="clear-tote-with-pocket_large.webp" alt="Samford Tote" />
-      <h3>Samford Tote</h3>
+      <img src="Samford Tote.jpg" alt="Samford Tote" />
+      <h3>Samford Stadium Tote</h3>
       <p>$24.99</p>
       <button class="add-to-cart">Add to Cart</button>
     </div>
 
-    <div class="product" data-id="samford-dogs-only" data-name='Samford "Dogs Only" Tee' data-price="24.99">
+    <div class="product" data-id="samford-dogs-only" data-name="Samford "Dogs Only" Tee" data-price="24.99">
       <h3>Samford "Dogs Only" Tee</h3>
       <p>$24.99</p>
-      <img id="shirt-image" src="ChatGPT_Image_Jun_6_2025_03_46_39_PM.png.png" alt='Samford "Dogs Only" White Tee' />
+      <img id="shirt-image" src="Navy.jpg.png" alt="Samford "Dogs Only" Tee" />
       <label for="size-sdo">Size:</label>
       <select id="size-sdo" name="size">
         <option value="">-- Select Size --</option>
@@ -231,10 +231,39 @@
         <option value="">-- Select Color --</option>
         <option value="White">White</option>
         <option value="Navy">Navy</option>
-        <option value="Red">Red</option>
       </select>
       <button class="add-to-cart">Add to Cart</button>
     </div>
+
+     <div class="product" data-id="Samford White tee" data-name="Samford White tee" data-price="24.99">
+      <h3>Samford White Tee</h3>
+      <p>$24.99</p>
+      <img id="shirt-image" src="White Tee.png" alt="Samford White tee"/>
+      <label for="size-sdo">Size:</label>
+      <select id="size-sdo" name="size">
+        <option value="">-- Select Size --</option>
+        <option value="S">Small</option>
+        <option value="M">Medium</option>
+        <option value="L">Large</option>
+        <option value="XL">X-Large</option>
+        <option value="2XL">2X-Large</option>
+        <option value="3XL">3X-Large</option>
+      </select>
+
+        <div class="product" data-id="Samford Red tee" data-name="Samford Red tee" data-price="24.99">
+      <h3>Samford Red Tee</h3>
+      <p>$24.99</p>
+      <img id="shirt-image" src="Red Tee.png" alt="Samford Red tee"/>
+      <label for="size-sdo">Size:</label>
+      <select id="size-sdo" name="size">
+        <option value="">-- Select Size --</option>
+        <option value="S">Small</option>
+        <option value="M">Medium</option>
+        <option value="L">Large</option>
+        <option value="XL">X-Large</option>
+        <option value="2XL">2X-Large</option>
+        <option value="3XL">3X-Large</option>
+      </select>
 
     <div class="product" data-id="sun-visor" data-name="Sun Visor" data-price="14.99">
       <img src="Visor.jpg" alt="Visor" />
@@ -286,9 +315,8 @@
 
     const colorToImage = {
       White: "ChatGPT_Image_Jun_6_2025_03_46_39_PM.png.png",
-      Navy: "Navy.png",
-      Red: "Red.jpg"
-    };
+      Navy: "Navy.jpg.png",
+          };
 
     colorSelect.addEventListener('change', () => {
       const selectedColor = colorSelect.value;
