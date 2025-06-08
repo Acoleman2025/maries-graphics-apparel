@@ -322,7 +322,8 @@
 
     // Update shirt image based on color selection
     const shirtImage = document.getElementById('shirt-image');
-    const colorSelect = document.getElementById('color-sdo');
+const colorSelect = document.querySelector('.color-select');  // safely select the color dropdown
+
 
     const colorToImage = {
       White: "ChatGPT_Image_Jun_6_2025_03_46_39_PM.png.png",
