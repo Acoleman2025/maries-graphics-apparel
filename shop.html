@@ -218,7 +218,7 @@
     <div class="product" data-id="samford-dogs-only" data-name='Samford "Dogs Only" Tee' data-price="24.99">
       <h3>Samford "Dogs Only" Tee</h3>
       <p>$24.99</p>
-      <img id="shirt-image" src="Navy.jpg.png" alt='Samford "Dogs Only" Navy Tee' />
+      <img id="shirt-image" src="Navy.jgp.png" alt='Samford "Dogs Only" Tee' />
       <label>Size:</label>
 <select class="size-select" name="size">
         <option value="">-- Select Size --</option>
@@ -333,7 +333,7 @@ const colorSelect = document.querySelector('.color-select');  // safely select t
 
     colorSelect.addEventListener('change', () => {
       const selectedColor = colorSelect.value;
-      shirtImage.src = colorToImage[selectedColor] || colorToImage.White;
+      shirtImage.src = colorToImage[selectedColor] || colorToImage.Navy;
       shirtImage.alt = `Samford ${selectedColor} Tee`;
     });
 
