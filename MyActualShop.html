@@ -309,24 +309,116 @@
     <button id="checkout-button">Checkout</button>
   </div>
 
-  <!-- Checkout Section -->
-  <section id="checkout-section" style="display:none;">
-    <h2>Checkout</h2>
-    <div id="checkout-cart"></div>
-    <p class="total">Total: $<span id="checkout-total">0.00</span></p>
+<!-- Checkout Section -->
+<section id="checkout-section" style="display:none;">
+  <h2>Checkout</h2>
+  <div id="checkout-cart"></div>
+  <p class="total">Total: $<span id="checkout-total">0.00</span></p>
 
-    <h3>Shipping Info</h3>
-    <form id="checkout-form">
-      <input type="text" id="name" placeholder="Full Name" required />
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="text" id="address" placeholder="Address" required />
-      <input type="text" id="city" placeholder="City" required />
-      <input type="text" id="zip" placeholder="ZIP Code" required />
-      <button type="submit">Place Order</button>
-    </form>
-  </section>
+  <h3>Shipping Info</h3>
+  <form id="checkout-form">
+    <input type="text" id="name" placeholder="Full Name" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="text" id="address" placeholder="Address" required />
+    <input type="text" id="city" placeholder="City" required />
+    <input type="text" id="zip" placeholder="ZIP Code" required />
 
-  <footer>
+    <!-- Square Card payment input here -->
+    <div id="card-container" style="margin: 1rem 0;"></div>
+
+    <button type="submit">Place Order</button>
+  </form>
+</section>
+
+<!-- Square Payment SDK -->
+<script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+
+<script>
+  const appId = 'sq0idp-yBj05c7DSsg9Wsql9ETwug';       // Your Square App ID
+  const locationId = 'LTNPX98YE7YP0'; // Your Square Location ID
+
+  let payments;
+  let card;
+
+  async function initializeSquarePayment() {
+    payments = Square.payments(appId, locationId);
+
+    try {
+      card = await payments.card();
+      await card.attach('#card-container');
+    } catch (e) {
+      console.error('Square card initialization failed:', e);
+      alert('Failed to load payment form. Please refresh the page.');
+    }
+  }
+
+  initializeSquarePayment();
+
+  const checkoutForm = document.getElementById('checkout-form');
+  checkoutForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    // Collect shipping info
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const zip = document.getElementById('zip').value.trim();
+
+    if (!name || !email || !address || !city || !zip) {
+      alert('Please fill in all shipping fields.');
+      return;
+    }
+
+    try {
+      // Tokenize card info
+      const result = await card.tokenize();
+
+      if (result.status !== 'OK') {
+        throw new Error(result.errors ? result.errors[0].message : 'Card tokenization failed');
+      }
+
+      const token = result.token;
+
+      // TODO: Replace with your actual cart total calculation in cents
+      const totalAmountCents = Math.round(parseFloat(document.getElementById('checkout-total').textContent) * 100);
+
+      // Send token and order details to your backend for payment processing
+      const response = await fetch('/api/process-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: token,
+          amount: totalAmountCents,
+          name,
+          email,
+          address,
+          city,
+          zip,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert(`Payment successful! Thank you for your order, ${name}!`);
+
+        // Clear cart and reset form, hide checkout section, etc.
+        checkoutForm.reset();
+        // Your cart clearing code here if needed
+        // Hide checkout section if desired:
+        // document.getElementById('checkout-section').style.display = 'none';
+
+      } else {
+        alert('Payment failed: ' + (data.error || 'Unknown error'));
+      }
+    } catch (error) {
+      alert('Payment error: ' + error.message);
+    }
+  });
+</script>
+
+<footer>
     <p>&copy; 2025 Marie's Graphics and Apparel. All rights reserved.</p>
      <nav>
     <a href="PrivatePolicy.html">Private Policy</a>
