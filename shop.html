@@ -343,8 +343,8 @@ const colorSelect = document.querySelector('.color-select');  // safely select t
     colorSelect.addEventListener('change', () => {
       const selectedColor = colorSelect.value;
       shirtImage.src = colorToImage[selectedColor] || colorToImage.Navy;
-      shirtImage.alt = Samford ${selectedColor} Tee;
-    });
+      shirtImage.alt = `Samford ${selectedColor} Tee`;
+      });
 
     // Cart Elements
     const cartToggle = document.getElementById('cart-toggle');
@@ -399,7 +399,7 @@ const colorSelect = document.querySelector('.color-select');  // safely select t
 
         localStorage.setItem('cart', JSON.stringify(cartItems));
         updateCartUI();
-        alert(${name} added to cart!);
+        alert(`${name} added to cart!`);
       });
     });
 
