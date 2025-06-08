@@ -287,6 +287,16 @@
     <option value="2XL">2X-Large</option>
     <option value="3XL">3X-Large</option>
   </select>
+
+        <!-- Stock per size -->
+<ul class="stock-status">
+  <li>Small: 10 in stock</li>
+  <li>Medium: 10 in stock</li>
+  <li>Large: 10 in stock</li>
+  <li>X-Large: 10 in stock</li>
+  <li>2X-Large: 10 in stock</li>
+  <li>3X-Large: 10 in stock</li>
+</ul>
   <button class="add-to-cart">Add to Cart</button>
           <p class="disclaimer">*Images are for illustrative purposes only. Actual product may vary in appearance and features. Embroidery is not offered.</p>
 </div>
@@ -356,10 +366,63 @@ const colorSelect = document.querySelector('.color-select');  // safely select t
       
      };
 
-    colorSelect.addEventListener('change', () => {
-      const selectedColor = colorSelect.value;
-      shirtImage.src = colorToImage[selectedColor] || colorToImage.Navy;
-      shirtImage.alt = `Samford ${selectedColor} Tee`;
+    
+colorSelect.addEventListener('change', () => {
+  const selectedColor = colorSelect.value;
+  shirtImage.src = colorToImage[selectedColor] || colorToImage.Navy;
+  shirtImage.alt = `Samford ${selectedColor} Tee`;
+
+  updateStock(); // update stock on color change
+});
+
+// --- STOCK CHECKING CODE STARTS HERE ---
+
+const stockStatus = document.querySelector('.stock-status');
+const addToCartBtn = document.querySelector('.add-to-cart');
+
+const stockData = {
+  White: { S: 10, M: 10, L: 510, XL: 10, "2XL": 10, "3XL": 10 },
+  Navy: { S: 10, M: 10, L: 10, XL: 10, "2XL": 10, "3XL": 10 }
+};
+
+function updateStock() {
+  const selectedColor = colorSelect.value;
+  const selectedSize = sizeSelect.value;
+
+  if (!selectedColor || !selectedSize) {
+    stockStatus.textContent = 'Please select both color and size.';
+    stockStatus.style.color = 'orange';
+    addToCartBtn.disabled = true;
+    addToCartBtn.style.opacity = '0.5';
+    addToCartBtn.style.cursor = 'not-allowed';
+    return;
+  }
+
+  const stockCount = (stockData[selectedColor] && stockData[selectedColor][selectedSize]) || 0;
+
+  if (stockCount > 0) {
+    stockStatus.textContent = `In Stock: ${stockCount}`;
+    stockStatus.style.color = 'green';
+    addToCartBtn.disabled = false;
+    addToCartBtn.style.opacity = '1';
+    addToCartBtn.style.cursor = 'pointer';
+  } else {
+    stockStatus.textContent = 'Out of Stock';
+    stockStatus.style.color = 'red';
+    addToCartBtn.disabled = true;
+    addToCartBtn.style.opacity = '0.5';
+    addToCartBtn.style.cursor = 'not-allowed';
+  }
+}
+
+// Update stock also when size changes
+sizeSelect.addEventListener('change', updateStock);
+
+// Call once initially to set the right state
+updateStock();
+
+// --- STOCK CHECKING CODE ENDS HERE ---
+
     });
 
     // Cart Elements
