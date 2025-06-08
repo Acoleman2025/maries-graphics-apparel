@@ -1,0 +1,36 @@
+import { Client, Environment } from 'square';
+
+const client = new Client({
+  environment: Environment.Sandbox, // use Production for live
+  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+});
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  try {
+    const { sourceId, amount } = req.body;
+
+    if (!sourceId || !amount) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    const paymentsApi = client.paymentsApi;
+    const requestBody = {
+      sourceId,
+      idempotencyKey: crypto.randomUUID(),
+      amountMoney: {
+        amount: amount, // in cents, e.g. 1999 for $19.99
+        currency: 'USD',
+      },
+    };
+
+    const response = await paymentsApi.createPayment(requestBody);
+
+    return res.status(200).json(response.result);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
