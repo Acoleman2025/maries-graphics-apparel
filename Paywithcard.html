@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pay with Card</title>
+  <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    #card-container { margin: 1rem 0; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <h2>Enter Card Info to Pay</h2>
+  <form id="payment-form">
+    <div id="card-container"></div>
+    <button id="card-button" type="submit">Pay $10.00</button>
+  </form>
+
+  <script>
+    const appId = 'REPLACE_WITH_YOUR_APP_ID';
+    const locationId = 'REPLACE_WITH_YOUR_LOCATION_ID';
+
+    async function start() {
+      const payments = Square.payments(appId, locationId);
+      const card = await payments.card();
+      await card.attach('#card-container');
+
+      document.getElementById('payment-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        try {
+          const result = await card.tokenize();
+          if (result.status !== 'OK') {
+            throw new Error(result.errors ? result.errors[0].message : 'Tokenization failed');
+          }
+
+          const token = result.token;
+
+          const response = await fetch('/process-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              token: token,
+              amount: 1000 // $10.00 in cents
+            })
+          });
+
+          const resData = await response.json();
+          if (resData.success) {
+            alert("Payment successful!");
+          } else {
+            alert("Payment failed: " + (resData.error || 'Unknown error'));
+          }
+        } catch (err) {
+          alert('Payment error: ' + err.message);
+        }
+      });
+    }
+
+    start();
+  </script>
+</body>
+</html>
