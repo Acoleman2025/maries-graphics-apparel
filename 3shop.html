@@ -310,10 +310,97 @@
   </div>
 
   <!-- Checkout Section -->
-  <section id="checkout-section" style="display:none;">
-    <h2>Checkout</h2>
-    <div id="checkout-cart"></div>
-    <p class="total">Total: $<span id="checkout-total">0.00</span></p>
+ <section id="checkout-section" style="display:none;">
+  <h2>Checkout</h2>
+  <div id="checkout-cart"></div>
+  <p class="total">Total: $<span id="checkout-total">0.00</span></p>
+
+  <h3>Shipping Info</h3>
+  <form id="checkout-form">
+    <input type="text" id="name" placeholder="Full Name" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="text" id="address" placeholder="Address" required />
+    <input type="text" id="city" placeholder="City" required />
+    <input type="text" id="zip" placeholder="ZIP Code" required />
+
+    <!-- Square Card payment input will attach here -->
+    <div id="card-container" style="margin: 1rem 0;"></div>
+
+    <button type="submit">Place Order</button>
+  </form>
+</section>
+
+<!-- Load Square payment SDK -->
+<script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+
+<script>
+  console.log("Shop page script running");
+
+  // Your existing code omitted for brevity...
+
+  // Initialize Square payments
+  const payments = Square.payments('YOUR_APPLICATION_ID', 'LOCATION_ID');
+  let card;
+
+  async function initializeCard() {
+    card = await payments.card();
+    await card.attach('#card-container');
+  }
+  initializeCard();
+
+  async function tokenize(paymentMethod) {
+    const result = await paymentMethod.tokenize();
+    if (result.status === 'OK') {
+      return result.token;
+    } else {
+      throw new Error('Tokenization failed: ' + (result.errors ? result.errors[0].message : 'Unknown error'));
+    }
+  }
+
+  // Checkout form submission handler
+  const checkoutForm = document.getElementById('checkout-form');
+  checkoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Collect form data
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const zip = document.getElementById('zip').value.trim();
+
+    if (!name || !email || !address || !city || !zip) {
+      alert('Please fill in all shipping fields.');
+      return;
+    }
+
+    try {
+      // Tokenize card info
+      const token = await tokenize(card);
+      console.log('Payment token:', token);
+
+      // TODO: Send token and shipping info to your backend for payment processing.
+      // For now, just show success alert and clear cart.
+      
+      alert(`Payment successful! Thank you for your order, ${name}!`);
+
+      cartItems = [];
+      localStorage.removeItem('cart');
+      updateCartUI();
+
+      checkoutForm.reset();
+      checkoutSection.style.display = 'none';
+
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  // Your existing updateCartUI and other functions...
+
+  // Initial UI update
+  updateCartUI();
+</script>
 
     <h3>Shipping Info</h3>
     <form id="checkout-form">
