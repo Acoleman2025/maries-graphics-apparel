@@ -389,10 +389,15 @@
         );
 
         if (existingIndex > -1) {
-          cartItems[existingIndex].quantity++;
-        } else {
-          cartItems.push({ id, name, price, quantity: 1, size, color });
+        if (cartItems[existingIndex].quantity < 5) 
+    cartItems[existingIndex].quantity++;} 
+        { else {
+          alert('Maximum quantity for this product is 5.');
+    return;
         }
+      } else {
+        cartItems.push({ id, name, price, quantity: 1, size, color });
+      }
 
         localStorage.setItem('cart', JSON.stringify(cartItems));
         updateCartUI();
